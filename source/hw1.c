@@ -122,6 +122,7 @@ static int __init hw1_init(void) {
 
 static void __exit hw1_exit(void) {
     remove_proc_entry(PROC_FILENAME, NULL);
+    remove_proc_entry(PROC_DIRNAME, NULL);
     printk(KERN_ALERT "<STATUS> hw1 module down...\n");
     return;
 }
