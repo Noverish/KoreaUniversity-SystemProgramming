@@ -33,9 +33,9 @@
 #include <linux/ratelimit.h>
 #include <linux/pm_runtime.h>
 #include <linux/blk-cgroup.h>
-// ----- added ----- by Hakyoung//
+//==============================================================================================
 #include <linux/time.h>
-// ----- added -----//
+//==============================================================================================
 
 #define CREATE_TRACE_POINTS
 #include <trace/events/block.h>
@@ -51,20 +51,18 @@ EXPORT_TRACEPOINT_SYMBOL_GPL(block_unplug);
 
 DEFINE_IDA(blk_queue_ida);
 
-// ----- added ----- by Inho //
+//==============================================================================================
 unsigned long long hw1_buffer[2000];
-EXPORT_SYMBOL(hw1_buffer);
 int hw1_index = 0;
-EXPORT_SYMBOL(hw1_index);
 long long int hw1_time[2000];
-EXPORT_SYMBOL(hw1_time);
-
-// ----- addedd ----- by Hakyoung //
 const char* hw1_file_system_type[2000];
-EXPORT_SYMBOL(hw1_file_system_type);
-
 struct timeval mytime;
-// ----- added -----//
+
+EXPORT_SYMBOL(hw1_buffer);
+EXPORT_SYMBOL(hw1_index);
+EXPORT_SYMBOL(hw1_time);
+EXPORT_SYMBOL(hw1_file_system_type);
+//==============================================================================================
 
 /*
  * For the allocated request tables
@@ -2128,20 +2126,21 @@ blk_qc_t submit_bio(int rw, struct bio *bio)
 		if (rw & WRITE) {
 			count_vm_events(PGPGOUT, count);
 
-			// ---- added ---- by Inho (16. 10. 26) // // ---- moved ---- by Hakyoung (16. 10. 28) //
-							if(bio->bi_iter.bi_sector!=NULL){    //should check if bi_sector is NULL. Otherwise, meaningless values will be included.
-									hw1_buffer[hw1_index] = (unsigned long long) bio->bi_iter.bi_sector;
-			// ---- added ---- by Hakyoung (16. 10. 31) //
-									do_gettimeofday(&mytime);
-									hw1_time[hw1_index] = (unsigned long long)(mytime.tv_sec) * 1000000 + (unsigned long long)(mytime.tv_usec);
+			//==============================================================================================
+			if(bio->bi_iter.bi_sector!=NULL) {
+				//should check if bi_sector is NULL. Otherwise, meaningless values will be included.
+				hw1_buffer[hw1_index] = (unsigned long long) bio->bi_iter.bi_sector;
+				do_gettimeofday(&mytime);
+				hw1_time[hw1_index] = (unsigned long long)(mytime.tv_sec) * 1000000 + (unsigned long long)(mytime.tv_usec);
 
-			// ---- added ---- by both (16. 11. 01) //
-				if(bio->bi_bdev != NULL) if(bio->bi_bdev->bd_super != NULL) if(bio->bi_bdev->bd_super->s_type != NULL)
-					hw1_file_system_type[hw1_index] = bio->bi_bdev->bd_super->s_type->name;
+				if(bio->bi_bdev != NULL)
+					if(bio->bi_bdev->bd_super != NULL)
+						if(bio->bi_bdev->bd_super->s_type != NULL)
+							hw1_file_system_type[hw1_index] = bio->bi_bdev->bd_super->s_type->name;
 
-									hw1_index = (hw1_index + 1) % 2000;
-									}
-			// ---- added ----//
+				hw1_index = (hw1_index + 1) % 2000;
+			}
+			//==============================================================================================
 		} else {
 			task_io_account_read(bio->bi_iter.bi_size);
 			count_vm_events(PGPGIN, count);
