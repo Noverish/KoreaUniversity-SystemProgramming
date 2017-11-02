@@ -62,7 +62,7 @@ static ssize_t hw1_write(struct file *file, const char __user *user_buffer, size
             printk("<user_buffer> : NULL\n");
             continue;
         }
-        printk("<user_buffer> : %.*s\n", count-1, user_buffer);
+        printk("<user_buffer> : %.*s\n", (int)(count-1), user_buffer);
 
         if(strncmp(hw1_file_system_type[i], user_buffer, count-1) != 0) {
             continue;
