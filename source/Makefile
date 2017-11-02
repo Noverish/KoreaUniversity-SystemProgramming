@@ -1,5 +1,5 @@
 obj-m +=hw1.o
-KDIR =/usr/src/linux-source-4.4.0/linux-source-4.4.0
+KDIR =/usr/src/linux-4.4
 
 all:
 	$(MAKE) -C $(KDIR) SUBDIRS=$(PWD) modules
