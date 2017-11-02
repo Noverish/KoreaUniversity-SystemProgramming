@@ -368,9 +368,10 @@ static int nilfs_segbuf_submit_bio(struct nilfs_segment_buffer *segbuf,
 
 	bio->bi_end_io = nilfs_end_bio_write;
 	bio->bi_private = segbuf;
-
-	printk("printk test");
-
+	// ----- added ----- by Hakyoung (16. 10. 26) //
+	if(bio->bi_bdev!=NULL)
+		bio->bi_bdev->bd_super = segbuf->sb_super;
+	// ----- added ----- //
 	submit_bio(mode, bio);
 	segbuf->sb_nbio++;
 
