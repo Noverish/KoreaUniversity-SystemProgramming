@@ -32,20 +32,17 @@ static ssize_t hw1_write(struct file *file, const char __user *user_buffer, size
     struct file *filp;
     char tmp[19];
 
-    printk("<hw1_index> : %d", hw1_index);
-
 	//set kernel memory to access user area's file
     mm_segment_t old_fs = get_fs();
     set_fs(KERNEL_DS);
 
     filp = filp_open("/tmp/result.csv", O_WRONLY|O_CREAT, 0644);
     if(IS_ERR(filp)) {
-        printk("file open error\n");
+        printk(KERN_ALERT "file open error\n");
 	    set_fs(old_fs);
-
 	    return count;
     } else {
-        printk("file open success\n");
+        printk(KERN_ALERT "file open success\n");
     }
 
     printk(KERN_ALERT "<STATUS> hw1_write!\n");
@@ -53,31 +50,31 @@ static ssize_t hw1_write(struct file *file, const char __user *user_buffer, size
     for(i = startindexpoint + 1; i != startindexpoint; i++) {
         i %= 2000;
 
-        printk("<i> : %d", i);
+        printk("<i> : %d\n", i);
 
         if(hw1_file_system_type[i] == NULL) {
-            printk("<hw1_file_system_type[i]> : NULL");
+            printk("<hw1_file_system_type[i]> : NULL\n");
             continue;
         }
-        printk("<hw1_file_system_type[i]> : %s", hw1_file_system_type[i]);
+        printk("<hw1_file_system_type[i]> : %s\n", hw1_file_system_type[i]);
 
         if(user_buffer == NULL) {
-            printk("<user_buffer> : NULL");
+            printk("<user_buffer> : NULL\n");
             continue;
         }
-        printk("<user_buffer> : %s", user_buffer);
+        printk("<user_buffer> : %.*s\n", count-1, user_buffer);
 
         if(strncmp(hw1_file_system_type[i], user_buffer, count-1) != 0) {
             continue;
         }
 
-        if(hw1_buffer[i] == NULL) {
-            printk("<hw1_buffer[i]> : NULL");
+        if(hw1_buffer[i] == 0) {
+            printk("<hw1_buffer[i]> : 0\n");
             continue;
         }
-        printk("<hw1_buffer[i]> : %lld", hw1_buffer[i]);
+        printk("<hw1_buffer[i]> : %lld\n", hw1_buffer[i]);
 
-        printk(KERN_INFO "%d:[%lld] %lld\n", i, hw1_time[i], hw1_buffer[i]);
+        // printk(KERN_INFO "%d:[%lld] %lld\n", i, hw1_time[i], hw1_buffer[i]);
 
         snprintf(tmp, 19, "%lld", hw1_time[i]);
         vfs_write(filp, tmp, strlen(tmp), &filp->f_pos);
@@ -88,8 +85,6 @@ static ssize_t hw1_write(struct file *file, const char __user *user_buffer, size
         vfs_write(filp, tmp, strlen(tmp), &filp->f_pos);
         vfs_write(filp, ", ", 2, &filp->f_pos);
 
-        printk("%s\n", hw1_file_system_type[i]);
-
         snprintf(tmp, 19, "%s", hw1_file_system_type[i]);
         vfs_write(filp, tmp, strlen(tmp), &filp->f_pos);
         vfs_write(filp, "\n", 1, &filp->f_pos);
@@ -97,6 +92,8 @@ static ssize_t hw1_write(struct file *file, const char __user *user_buffer, size
         hw1_time[i]=0;
         hw1_buffer[i]=0;
         hw1_file_system_type[i]=NULL;
+
+        printk("\n");
     }
 
     printk(KERN_ALERT "<STATUS> hw1_write complete.\n");
