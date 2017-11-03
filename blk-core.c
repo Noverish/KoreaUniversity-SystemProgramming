@@ -2130,13 +2130,13 @@ blk_qc_t submit_bio(int rw, struct bio *bio)
 			//==============================================================================================
 			//should check if bi_sector is NULL. Otherwise, meaningless values will be included.
 			if(bio->bi_iter.bi_sector != 0) {
-				char* file_system_name = NULL;
+				int is_nilfs = 0;
 
 				if(bio->bi_bdev != NULL) {
 					if(bio->bi_bdev->bd_super != NULL) {
 						if(bio->bi_bdev->bd_super->s_type != NULL) {
 							if(bio->bi_bdev->bd_super->s_type->name != NULL) {
-								file_system_name = bio->bi_bdev->bd_super->s_type->name;
+								is_nilfs = strcmp(bio->bi_bdev->bd_super->s_type->name, "nilfs2") == 0;
 								// printk("submit_bio - bio->bi_bdev->bd_super->s_type->name : %s\n", bio->bi_bdev->bd_super->s_type->name);
 							} else {
 								printk("submit_bio - bio->bi_bdev->bd_super->s_type->name : NULL\n");
@@ -2151,7 +2151,7 @@ blk_qc_t submit_bio(int rw, struct bio *bio)
 					printk("submit_bio - bio->bi_bdev : NULL\n");
 				}
 
-				if(strcmp(file_system_name, "nilfs2") == 0) {
+				if(is_nilfs) {
 					do_gettimeofday(&mytime);
 
 					hw1_file_system_type[hw1_index] = file_system_name;
