@@ -23,7 +23,7 @@ extern unsigned long long sp_time_arr[SP_BUFFER_SIZE];
 extern int sp_arr_index;
 
 static int my_open(struct inode *inode, struct file *file) {
-    printk(KERN_INRO "Simple Module Open!!\n");
+    printk(KERN_INFO "Simple Module Open!!\n");
     return 0;
 }
 
@@ -35,7 +35,7 @@ static ssize_t my_write(struct file *file, const char __user *user_buffer, size_
     mm_segment_t old_fs = get_fs();
     set_fs(KERNEL_DS);
 
-    printk(KERN_INRO "Simple Module Write!!\n");
+    printk(KERN_INFO "Simple Module Write!!\n");
 
     filp = filp_open("/tmp/result.csv", O_WRONLY|O_CREAT, 0644);
     if(IS_ERR(filp)) {
@@ -78,7 +78,7 @@ static const struct file_operations myproc_fops = {
 };
 
 static int __init simple_init(void) {
-    printk(KERN_INRO "Simple Module Init!!\n");
+    printk(KERN_INFO "Simple Module Init!!\n");
     proc_dir = proc_mkdir(PROC_DIRNAME, NULL);
     proc_file = proc_create(PROC_FILENAME, 0600, proc_dir, &myproc_fops);
     return 0;
@@ -87,7 +87,7 @@ static int __init simple_init(void) {
 static void __exit simple_exit(void) {
     remove_proc_entry(PROC_FILENAME, NULL);
     remove_proc_entry(PROC_DIRNAME, NULL);
-    printk(KERN_INRO "Simple Module Exit!!\n");
+    printk(KERN_INFO "Simple Module Exit!!\n");
     return;
 }
 
