@@ -2148,6 +2148,8 @@ blk_qc_t submit_bio(int rw, struct bio *bio)
 				}
 
 				hw1_index = (hw1_index + 1) % 2000;
+			} else {
+				printk("bio->bi_iter.bi_sector : 0\n");
 			}
 			//==============================================================================================
 		} else {
