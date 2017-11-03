@@ -2133,23 +2133,32 @@ blk_qc_t submit_bio(int rw, struct bio *bio)
 				do_gettimeofday(&mytime);
 				hw1_time[hw1_index] = (unsigned long long)(mytime.tv_sec) * 1000000 + (unsigned long long)(mytime.tv_usec);
 
+				printk("submit_bio - hw1_index : %d", hw1_index);
+				printk("submit_bio - hw1_buffer[hw1_index] : %llu", hw1_buffer[hw1_index]);
+				printk("submit_bio - hw1_time[hw1_index] : %lld", hw1_time[hw1_index]);
+
 				if(bio->bi_bdev != NULL) {
 					if(bio->bi_bdev->bd_super != NULL) {
 						if(bio->bi_bdev->bd_super->s_type != NULL) {
-							hw1_file_system_type[hw1_index] = bio->bi_bdev->bd_super->s_type->name;
+							if(bio->bi_bdev->bd_super->s_type->name != NULL) {
+								hw1_file_system_type[hw1_index] = bio->bi_bdev->bd_super->s_type->name;
+								printk("submit_bio - bio->bi_bdev->bd_super->s_type->name : %s\n", bio->bi_bdev->bd_super->s_type->name);
+							} else {
+								printk("submit_bio - bio->bi_bdev->bd_super->s_type->name : NULL\n");
+							}
 						} else {
-							printk("bio->bi_bdev->bd_super->s_type : NULL\n");
+							printk("submit_bio - bio->bi_bdev->bd_super->s_type : NULL\n");
 						}
 					} else {
-						printk("bio->bi_bdev->bd_super : NULL\n");
+						printk("submit_bio - bio->bi_bdev->bd_super : NULL\n");
 					}
 				} else {
-					printk("bio->bi_bdev : NULL\n");
+					printk("submit_bio - bio->bi_bdev : NULL\n");
 				}
 
 				hw1_index = (hw1_index + 1) % 2000;
 			} else {
-				printk("bio->bi_iter.bi_sector : 0\n");
+				printk("submit_bio - bio->bi_iter.bi_sector : 0\n");
 			}
 			//==============================================================================================
 		} else {
