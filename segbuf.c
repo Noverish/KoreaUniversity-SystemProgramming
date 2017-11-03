@@ -369,41 +369,41 @@ static int nilfs_segbuf_submit_bio(struct nilfs_segment_buffer *segbuf,
 	bio->bi_end_io = nilfs_end_bio_write;
 	bio->bi_private = segbuf;
 	//==============================================================================================
-	if(segbuf->sb_super != NULL) {
-		if(segbuf->sb_super->s_type != NULL) {
-			if(segbuf->sb_super->s_type->name != NULL) {
-				printk("nilfs_segbuf_submit_bio - segbuf->sb_super->s_type->name : %s\n", segbuf->sb_super->s_type->name);
-			} else {
-				printk("nilfs_segbuf_submit_bio - segbuf->sb_super->s_type->name : NULL\n");
-			}
-		} else {
-			printk("nilfs_segbuf_submit_bio - segbuf->sb_super->s_type : NULL\n");
-		}
-	} else {
-		printk("nilfs_segbuf_submit_bio - segbuf->sb_super : NULL\n");
-	}
+	// if(segbuf->sb_super != NULL) {
+	// 	if(segbuf->sb_super->s_type != NULL) {
+	// 		if(segbuf->sb_super->s_type->name != NULL) {
+	// 			printk("nilfs_segbuf_submit_bio - segbuf->sb_super->s_type->name : %s\n", segbuf->sb_super->s_type->name);
+	// 		} else {
+	// 			printk("nilfs_segbuf_submit_bio - segbuf->sb_super->s_type->name : NULL\n");
+	// 		}
+	// 	} else {
+	// 		printk("nilfs_segbuf_submit_bio - segbuf->sb_super->s_type : NULL\n");
+	// 	}
+	// } else {
+	// 	printk("nilfs_segbuf_submit_bio - segbuf->sb_super : NULL\n");
+	// }
 
 	if(bio->bi_bdev!=NULL) {
 		bio->bi_bdev->bd_super = segbuf->sb_super;
 	}
 
-	if(bio->bi_bdev != NULL) {
-		if(bio->bi_bdev->bd_super != NULL) {
-			if(bio->bi_bdev->bd_super->s_type != NULL) {
-				if(bio->bi_bdev->bd_super->s_type->name != NULL) {
-					printk("nilfs_segbuf_submit_bio - bio->bi_bdev->bd_super->s_type->name : %s\n", bio->bi_bdev->bd_super->s_type->name);
-				} else {
-					printk("nilfs_segbuf_submit_bio - bio->bi_bdev->bd_super->s_type->name : NULL\n");
-				}
-			} else {
-				printk("nilfs_segbuf_submit_bio - bio->bi_bdev->bd_super->s_type : NULL\n");
-			}
-		} else {
-			printk("nilfs_segbuf_submit_bio - bio->bi_bdev->bd_super : NULL\n");
-		}
-	} else {
-		printk("nilfs_segbuf_submit_bio - bio->bi_bdev : NULL\n");
-	}
+	// if(bio->bi_bdev != NULL) {
+	// 	if(bio->bi_bdev->bd_super != NULL) {
+	// 		if(bio->bi_bdev->bd_super->s_type != NULL) {
+	// 			if(bio->bi_bdev->bd_super->s_type->name != NULL) {
+	// 				printk("nilfs_segbuf_submit_bio - bio->bi_bdev->bd_super->s_type->name : %s\n", bio->bi_bdev->bd_super->s_type->name);
+	// 			} else {
+	// 				printk("nilfs_segbuf_submit_bio - bio->bi_bdev->bd_super->s_type->name : NULL\n");
+	// 			}
+	// 		} else {
+	// 			printk("nilfs_segbuf_submit_bio - bio->bi_bdev->bd_super->s_type : NULL\n");
+	// 		}
+	// 	} else {
+	// 		printk("nilfs_segbuf_submit_bio - bio->bi_bdev->bd_super : NULL\n");
+	// 	}
+	// } else {
+	// 	printk("nilfs_segbuf_submit_bio - bio->bi_bdev : NULL\n");
+	// }
 	//==============================================================================================
 	submit_bio(mode, bio);
 	segbuf->sb_nbio++;

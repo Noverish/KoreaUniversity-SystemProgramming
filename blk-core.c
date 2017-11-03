@@ -54,8 +54,8 @@ DEFINE_IDA(blk_queue_ida);
 
 //==============================================================================================
 unsigned long long hw1_buffer[HW1_SIZE];
+unsigned long long hw1_time[HW1_SIZE];
 int hw1_index = 0;
-long long int hw1_time[HW1_SIZE];
 const char* hw1_file_system_type[HW1_SIZE];
 struct timeval mytime;
 
@@ -2128,22 +2128,16 @@ blk_qc_t submit_bio(int rw, struct bio *bio)
 			count_vm_events(PGPGOUT, count);
 
 			//==============================================================================================
+			//should check if bi_sector is NULL. Otherwise, meaningless values will be included.
 			if(bio->bi_iter.bi_sector != 0) {
-				//should check if bi_sector is NULL. Otherwise, meaningless values will be included.
-				hw1_buffer[hw1_index] = (unsigned long long) bio->bi_iter.bi_sector;
-				do_gettimeofday(&mytime);
-				hw1_time[hw1_index] = (unsigned long long)(mytime.tv_sec) * 1000000 + (unsigned long long)(mytime.tv_usec);
-
-				printk("submit_bio - hw1_index : %d\n", hw1_index);
-				printk("submit_bio - hw1_buffer[hw1_index] : %llu\n", hw1_buffer[hw1_index]);
-				printk("submit_bio - hw1_time[hw1_index] : %lld\n", hw1_time[hw1_index]);
+				char* file_system_name = NULL;
 
 				if(bio->bi_bdev != NULL) {
 					if(bio->bi_bdev->bd_super != NULL) {
 						if(bio->bi_bdev->bd_super->s_type != NULL) {
 							if(bio->bi_bdev->bd_super->s_type->name != NULL) {
-								hw1_file_system_type[hw1_index] = bio->bi_bdev->bd_super->s_type->name;
-								printk("submit_bio - bio->bi_bdev->bd_super->s_type->name : %s\n", bio->bi_bdev->bd_super->s_type->name);
+								file_system_name = bio->bi_bdev->bd_super->s_type->name;
+								// printk("submit_bio - bio->bi_bdev->bd_super->s_type->name : %s\n", bio->bi_bdev->bd_super->s_type->name);
 							} else {
 								printk("submit_bio - bio->bi_bdev->bd_super->s_type->name : NULL\n");
 							}
@@ -2157,9 +2151,20 @@ blk_qc_t submit_bio(int rw, struct bio *bio)
 					printk("submit_bio - bio->bi_bdev : NULL\n");
 				}
 
-				hw1_index = (hw1_index + 1) % HW1_SIZE;
+				if(strcmp(file_system_name, "nilfs2") == 0) {
+					do_gettimeofday(&mytime);
+
+					hw1_file_system_type[hw1_index] = file_system_name;
+					hw1_buffer[hw1_index] = (unsigned long long) bio->bi_iter.bi_sector;
+					hw1_time[hw1_index] = (unsigned long long)(mytime.tv_sec) * 1000000 + (unsigned long long)(mytime.tv_usec);
+					hw1_index = (hw1_index + 1) % HW1_SIZE;
+
+					// printk("submit_bio - hw1_index : %d\n", hw1_index);
+					// printk("submit_bio - hw1_buffer[hw1_index] : %llu\n", hw1_buffer[hw1_index]);
+					// printk("submit_bio - hw1_time[hw1_index] : %lld\n", hw1_time[hw1_index]);
+		        }
 			} else {
-				printk("submit_bio - bio->bi_iter.bi_sector : 0\n");
+				// printk("submit_bio - bio->bi_iter.bi_sector : 0\n");
 			}
 			//==============================================================================================
 		} else {

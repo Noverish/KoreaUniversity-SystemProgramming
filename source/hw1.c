@@ -19,7 +19,7 @@ static struct proc_dir_entry *proc_dir;
 static struct proc_dir_entry *proc_file;
 
 extern unsigned long long hw1_buffer[HW1_SIZE];
-extern long long int hw1_time[HW1_SIZE];
+extern unsigned long long hw1_time[HW1_SIZE];
 extern int hw1_index;
 extern const char* hw1_file_system_type[HW1_SIZE];
 
@@ -51,44 +51,46 @@ static ssize_t hw1_write(struct file *file, const char __user *user_buffer, size
     for(i = startindexpoint + 1; i != startindexpoint; i++) {
         i %= HW1_SIZE;
 
-        printk("<i> : %d\n", i);
+        printk("i : %d\n", i);
 
-        if(hw1_file_system_type[i] == NULL) {
-            printk("<hw1_file_system_type[i]> : NULL\n");
-            continue;
-        }
-        printk("<hw1_file_system_type[i]> : %s\n", hw1_file_system_type[i]);
+        // if(hw1_file_system_type[i] == NULL) {
+        //     printk("<hw1_file_system_type[i]> : NULL\n");
+        //     continue;
+        // }
+        // printk("<hw1_file_system_type[i]> : %s\n", hw1_file_system_type[i]);
 
-        if(user_buffer == NULL) {
-            printk("<user_buffer> : NULL\n");
-            continue;
-        }
-        printk("<user_buffer> : %.*s\n", (int)(count-1), user_buffer);
+        // if(user_buffer == NULL) {
+        //     printk("<user_buffer> : NULL\n");
+        //     continue;
+        // }
+        // printk("<user_buffer> : %.*s\n", (int)(count-1), user_buffer);
 
-        if(strncmp(hw1_file_system_type[i], user_buffer, count-1) != 0) {
-            continue;
-        }
+        // if(strncmp(hw1_file_system_type[i], user_buffer, count-1) != 0) {
+        //     continue;
+        // }
 
-        if(hw1_buffer[i] == 0) {
-            printk("<hw1_buffer[i]> : 0\n");
-            continue;
-        }
-        printk("<hw1_buffer[i]> : %lld\n", hw1_buffer[i]);
+        // if(hw1_buffer[i] == 0) {
+        //     printk("<hw1_buffer[i]> : 0\n");
+        //     continue;
+        // }
+        // printk("<hw1_buffer[i]> : %lld\n", hw1_buffer[i]);
 
         // printk(KERN_INFO "%d:[%lld] %lld\n", i, hw1_time[i], hw1_buffer[i]);
 
-        snprintf(tmp, 19, "%lld", hw1_time[i]);
+        snprintf(tmp, 19, "%llu", hw1_time[i]);
         vfs_write(filp, tmp, strlen(tmp), &filp->f_pos);
         vfs_write(filp, ", ", 2, &filp->f_pos);
+        printk("hw1_time[i] : %llu\n", hw1_time[i]);
 
-        snprintf(tmp, 19, "%lld", hw1_buffer[i]);
-
+        snprintf(tmp, 19, "%llu", hw1_buffer[i]);
         vfs_write(filp, tmp, strlen(tmp), &filp->f_pos);
         vfs_write(filp, ", ", 2, &filp->f_pos);
+        printk("hw1_buffer[i] : %llu\n", hw1_buffer[i]);
 
         snprintf(tmp, 19, "%s", hw1_file_system_type[i]);
         vfs_write(filp, tmp, strlen(tmp), &filp->f_pos);
         vfs_write(filp, "\n", 1, &filp->f_pos);
+        printk("hw1_file_system_type[i] : %s\n", hw1_file_system_type[i]);
 
         hw1_time[i]=0;
         hw1_buffer[i]=0;
