@@ -11,16 +11,17 @@
 #include <asm/segment.h>
 #include <linux/buffer_head.h>
 
+#define HW1_SIZE 2000
 #define PROC_DIRNAME "myproc"
 #define PROC_FILENAME "hw1"
 
 static struct proc_dir_entry *proc_dir;
 static struct proc_dir_entry *proc_file;
 
-extern unsigned long long hw1_buffer[1024];
-extern long long int hw1_time[1024];
+extern unsigned long long hw1_buffer[HW1_SIZE];
+extern long long int hw1_time[HW1_SIZE];
 extern int hw1_index;
-extern const char* hw1_file_system_type[1024];
+extern const char* hw1_file_system_type[HW1_SIZE];
 
 static int hw1_open(struct inode *inode, struct file *file) {
     printk(KERN_ALERT "<STATUS> hw1_open!\n");
@@ -48,7 +49,7 @@ static ssize_t hw1_write(struct file *file, const char __user *user_buffer, size
     printk(KERN_ALERT "<STATUS> hw1_write!\n");
 
     for(i = startindexpoint + 1; i != startindexpoint; i++) {
-        i %= 2000;
+        i %= HW1_SIZE;
 
         printk("<i> : %d\n", i);
 

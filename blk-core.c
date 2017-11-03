@@ -34,6 +34,7 @@
 #include <linux/pm_runtime.h>
 #include <linux/blk-cgroup.h>
 //==============================================================================================
+#define HW1_SIZE 2000
 #include <linux/time.h>
 //==============================================================================================
 
@@ -52,10 +53,10 @@ EXPORT_TRACEPOINT_SYMBOL_GPL(block_unplug);
 DEFINE_IDA(blk_queue_ida);
 
 //==============================================================================================
-unsigned long long hw1_buffer[2000];
+unsigned long long hw1_buffer[HW1_SIZE];
 int hw1_index = 0;
-long long int hw1_time[2000];
-const char* hw1_file_system_type[2000];
+long long int hw1_time[HW1_SIZE];
+const char* hw1_file_system_type[HW1_SIZE];
 struct timeval mytime;
 
 EXPORT_SYMBOL(hw1_buffer);
@@ -2133,9 +2134,9 @@ blk_qc_t submit_bio(int rw, struct bio *bio)
 				do_gettimeofday(&mytime);
 				hw1_time[hw1_index] = (unsigned long long)(mytime.tv_sec) * 1000000 + (unsigned long long)(mytime.tv_usec);
 
-				printk("submit_bio - hw1_index : %d", hw1_index);
-				printk("submit_bio - hw1_buffer[hw1_index] : %llu", hw1_buffer[hw1_index]);
-				printk("submit_bio - hw1_time[hw1_index] : %lld", hw1_time[hw1_index]);
+				printk("submit_bio - hw1_index : %d\n", hw1_index);
+				printk("submit_bio - hw1_buffer[hw1_index] : %llu\n", hw1_buffer[hw1_index]);
+				printk("submit_bio - hw1_time[hw1_index] : %lld\n", hw1_time[hw1_index]);
 
 				if(bio->bi_bdev != NULL) {
 					if(bio->bi_bdev->bd_super != NULL) {
@@ -2156,7 +2157,7 @@ blk_qc_t submit_bio(int rw, struct bio *bio)
 					printk("submit_bio - bio->bi_bdev : NULL\n");
 				}
 
-				hw1_index = (hw1_index + 1) % 2000;
+				hw1_index = (hw1_index + 1) % HW1_SIZE;
 			} else {
 				printk("submit_bio - bio->bi_iter.bi_sector : 0\n");
 			}
