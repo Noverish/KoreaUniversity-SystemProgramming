@@ -21,12 +21,12 @@ IOzone [iozone-3-414](http://iozone.org/src/current/iozone3_414.tar)
 1. Check dmesg and /tmp/result.csv
 
 ### Result
-![hw1_1.png](https://github.com/Noverish/KU-SP-2017-Fall/blob/master/images/hw1_1.PNG?raw=true)
-x-axis : time (microsecond)
-y-axis : sector number
+![hw1_1.png](https://github.com/Noverish/KU-SP-2017-Fall/blob/master/images/hw1_1.PNG?raw=true)  
+x-axis : time (microsecond)  
+y-axis : sector number  
 
-![hw1_2.png](https://github.com/Noverish/KU-SP-2017-Fall/blob/master/images/hw1_2.PNG?raw=true)
-dmesg
+![hw1_2.png](https://github.com/Noverish/KU-SP-2017-Fall/blob/master/images/hw1_2.PNG?raw=true)  
+dmesg  
 
-![hw1_3.png](https://github.com/Noverish/KU-SP-2017-Fall/blob/master/images/hw1_3.PNG?raw=true)
-/tmp/result.csv
+![hw1_3.png](https://github.com/Noverish/KU-SP-2017-Fall/blob/master/images/hw1_3.PNG?raw=true)  
+/tmp/result.csv  
