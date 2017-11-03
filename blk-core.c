@@ -2154,7 +2154,7 @@ blk_qc_t submit_bio(int rw, struct bio *bio)
 				if(is_nilfs) {
 					do_gettimeofday(&mytime);
 
-					hw1_file_system_type[hw1_index] = file_system_name;
+					hw1_file_system_type[hw1_index] = bio->bi_bdev->bd_super->s_type->name;
 					hw1_buffer[hw1_index] = (unsigned long long) bio->bi_iter.bi_sector;
 					hw1_time[hw1_index] = (unsigned long long)(mytime.tv_sec) * 1000000 + (unsigned long long)(mytime.tv_usec);
 					hw1_index = (hw1_index + 1) % HW1_SIZE;
