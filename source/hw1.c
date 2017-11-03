@@ -11,7 +11,7 @@
 #include <asm/segment.h>
 #include <linux/buffer_head.h>
 
-#define HW1_SIZE 2000
+#define HW1_SIZE 1000
 #define PROC_DIRNAME "myproc"
 #define PROC_FILENAME "hw1"
 
