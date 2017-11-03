@@ -2127,7 +2127,7 @@ blk_qc_t submit_bio(int rw, struct bio *bio)
 			count_vm_events(PGPGOUT, count);
 
 			//==============================================================================================
-			if(bio->bi_iter.bi_sector!=NULL) {
+			if(bio->bi_iter.bi_sector != 0) {
 				//should check if bi_sector is NULL. Otherwise, meaningless values will be included.
 				hw1_buffer[hw1_index] = (unsigned long long) bio->bi_iter.bi_sector;
 				do_gettimeofday(&mytime);
@@ -2138,13 +2138,13 @@ blk_qc_t submit_bio(int rw, struct bio *bio)
 						if(bio->bi_bdev->bd_super->s_type != NULL) {
 							hw1_file_system_type[hw1_index] = bio->bi_bdev->bd_super->s_type->name;
 						} else {
-							printk("bio->bi_bdev->bd_super->s_type == NULL");
+							printk("bio->bi_bdev->bd_super->s_type == NULL\n");
 						}
 					} else {
-						printk("bio->bi_bdev->bd_super == NULL");
+						printk("bio->bi_bdev->bd_super == NULL\n");
 					}
 				} else {
-					printk("bio->bi_bdev == NULL");
+					printk("bio->bi_bdev == NULL\n");
 				}
 
 				hw1_index = (hw1_index + 1) % 2000;
