@@ -373,10 +373,10 @@ static int nilfs_segbuf_submit_bio(struct nilfs_segment_buffer *segbuf,
 		if(segbuf->sb_super->s_type != NULL) {
 			printk("nilfs_segbuf_submit_bio - segbuf->sb_super->s_type : %s\n", segbuf->sb_super->s_type);
 		} else {
-			printk("nilfs_segbuf_submit_bio - segbuf->sb_super->s_type : NULL\n",);
+			printk("nilfs_segbuf_submit_bio - segbuf->sb_super->s_type : NULL\n");
 		}
 	} else {
-		printk("nilfs_segbuf_submit_bio - segbuf->sb_super : NULL\n",);
+		printk("nilfs_segbuf_submit_bio - segbuf->sb_super : NULL\n");
 	}
 
 	if(bio->bi_bdev!=NULL) {
