@@ -2138,13 +2138,13 @@ blk_qc_t submit_bio(int rw, struct bio *bio)
 						if(bio->bi_bdev->bd_super->s_type != NULL) {
 							hw1_file_system_type[hw1_index] = bio->bi_bdev->bd_super->s_type->name;
 						} else {
-							printk("bio->bi_bdev->bd_super->s_type == NULL\n");
+							printk("bio->bi_bdev->bd_super->s_type : NULL\n");
 						}
 					} else {
-						printk("bio->bi_bdev->bd_super == NULL\n");
+						printk("bio->bi_bdev->bd_super : NULL\n");
 					}
 				} else {
-					printk("bio->bi_bdev == NULL\n");
+					printk("bio->bi_bdev : NULL\n");
 				}
 
 				hw1_index = (hw1_index + 1) % 2000;
