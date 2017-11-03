@@ -2,7 +2,7 @@
 cd /root
 rm diskfile
 rm -rf nilfs_disk
-dd if=/dev/zero of=./diskfile bs=1024 count=1000000
+dd if=/dev/zero of=./diskfile bs=1024 count=200000
 mkfs.nilfs2 ./diskfile
 losetup /dev/loop0 ./diskfile
 mkdir nilfs_disk
