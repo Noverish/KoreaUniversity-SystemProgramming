@@ -371,7 +371,11 @@ static int nilfs_segbuf_submit_bio(struct nilfs_segment_buffer *segbuf,
 	//==============================================================================================
 	if(segbuf->sb_super != NULL) {
 		if(segbuf->sb_super->s_type != NULL) {
-			printk("nilfs_segbuf_submit_bio - segbuf->sb_super->s_type : %s\n", segbuf->sb_super->s_type);
+			if(segbuf->sb_super->s_type->name != NULL) {
+				printk("nilfs_segbuf_submit_bio - segbuf->sb_super->s_type->name : %s\n", segbuf->sb_super->s_type->name);
+			} else {
+				printk("nilfs_segbuf_submit_bio - segbuf->sb_super->s_type->name : NULL\n");
+			}
 		} else {
 			printk("nilfs_segbuf_submit_bio - segbuf->sb_super->s_type : NULL\n");
 		}
@@ -386,7 +390,11 @@ static int nilfs_segbuf_submit_bio(struct nilfs_segment_buffer *segbuf,
 	if(bio->bi_bdev != NULL) {
 		if(bio->bi_bdev->bd_super != NULL) {
 			if(bio->bi_bdev->bd_super->s_type != NULL) {
-				printk("nilfs_segbuf_submit_bio - bio->bi_bdev->bd_super->s_type : %s\n", bio->bi_bdev->bd_super->s_type);
+				if(bio->bi_bdev->bd_super->s_type->name != NULL) {
+					printk("nilfs_segbuf_submit_bio - bio->bi_bdev->bd_super->s_type->name : %s\n", bio->bi_bdev->bd_super->s_type->name);
+				} else {
+					printk("nilfs_segbuf_submit_bio - bio->bi_bdev->bd_super->s_type->name : NULL\n");
+				}
 			} else {
 				printk("nilfs_segbuf_submit_bio - bio->bi_bdev->bd_super->s_type : NULL\n");
 			}
