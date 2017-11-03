@@ -34,7 +34,7 @@
 #include <linux/pm_runtime.h>
 #include <linux/blk-cgroup.h>
 //HyunsubKim 2017-11-02 Start ==================================================
-#define SP_BUFFER_SIZE 1000
+#define SP_BUFFER_SIZE 1000 //buffer size
 #include <linux/time.h>
 //HyunsubKim 2017-11-02 End ====================================================
 
@@ -53,10 +53,10 @@ EXPORT_TRACEPOINT_SYMBOL_GPL(block_unplug);
 DEFINE_IDA(blk_queue_ida);
 
 //HyunsubKim 2017-11-02 Start ==================================================
-unsigned long long sp_sector_arr[SP_BUFFER_SIZE];
-unsigned long long sp_time_arr[SP_BUFFER_SIZE];
-int sp_arr_index = 0;
-struct timeval sp_timeval;
+unsigned long long sp_sector_arr[SP_BUFFER_SIZE]; //array storing sector numbers
+unsigned long long sp_time_arr[SP_BUFFER_SIZE]; //array storing microsecond
+int sp_arr_index = 0; // index of now buffer
+struct timeval sp_timeval; // using when get now microsecond
 
 EXPORT_SYMBOL(sp_sector_arr);
 EXPORT_SYMBOL(sp_arr_index);
