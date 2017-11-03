@@ -2133,10 +2133,19 @@ blk_qc_t submit_bio(int rw, struct bio *bio)
 				do_gettimeofday(&mytime);
 				hw1_time[hw1_index] = (unsigned long long)(mytime.tv_sec) * 1000000 + (unsigned long long)(mytime.tv_usec);
 
-				if(bio->bi_bdev != NULL)
-					if(bio->bi_bdev->bd_super != NULL)
-						if(bio->bi_bdev->bd_super->s_type != NULL)
+				if(bio->bi_bdev != NULL) {
+					if(bio->bi_bdev->bd_super != NULL) {
+						if(bio->bi_bdev->bd_super->s_type != NULL) {
 							hw1_file_system_type[hw1_index] = bio->bi_bdev->bd_super->s_type->name;
+						} else {
+							printk("bio->bi_bdev->bd_super->s_type == NULL");
+						}
+					} else {
+						printk("bio->bi_bdev->bd_super == NULL");
+					}
+				} else {
+					printk("bio->bi_bdev == NULL");
+				}
 
 				hw1_index = (hw1_index + 1) % 2000;
 			}
