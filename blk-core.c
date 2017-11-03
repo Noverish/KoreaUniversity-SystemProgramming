@@ -33,10 +33,10 @@
 #include <linux/ratelimit.h>
 #include <linux/pm_runtime.h>
 #include <linux/blk-cgroup.h>
-//==============================================================================================
-#define HW1_SIZE 1000
+//HyunsubKim 2017-11-02 Start ==================================================
+#define SP_BUFFER_SIZE 1000
 #include <linux/time.h>
-//==============================================================================================
+//HyunsubKim 2017-11-02 End ====================================================
 
 #define CREATE_TRACE_POINTS
 #include <trace/events/block.h>
@@ -52,18 +52,16 @@ EXPORT_TRACEPOINT_SYMBOL_GPL(block_unplug);
 
 DEFINE_IDA(blk_queue_ida);
 
-//==============================================================================================
-unsigned long long hw1_buffer[HW1_SIZE];
-unsigned long long hw1_time[HW1_SIZE];
-int hw1_index = 0;
-const char* hw1_file_system_type[HW1_SIZE];
-struct timeval mytime;
+//HyunsubKim 2017-11-02 Start ==================================================
+unsigned long long sp_sector_arr[SP_BUFFER_SIZE];
+unsigned long long sp_time_arr[SP_BUFFER_SIZE];
+int sp_arr_index = 0;
+struct timeval sp_timeval;
 
-EXPORT_SYMBOL(hw1_buffer);
-EXPORT_SYMBOL(hw1_index);
-EXPORT_SYMBOL(hw1_time);
-EXPORT_SYMBOL(hw1_file_system_type);
-//==============================================================================================
+EXPORT_SYMBOL(sp_sector_arr);
+EXPORT_SYMBOL(sp_arr_index);
+EXPORT_SYMBOL(sp_time_arr);
+//HyunsubKim 2017-11-02 End ====================================================
 
 /*
  * For the allocated request tables
@@ -2127,46 +2125,25 @@ blk_qc_t submit_bio(int rw, struct bio *bio)
 		if (rw & WRITE) {
 			count_vm_events(PGPGOUT, count);
 
-			//==============================================================================================
-			//should check if bi_sector is NULL. Otherwise, meaningless values will be included.
+			//HyunsubKim 2017-11-02 Start ======================================
 			if(bio->bi_iter.bi_sector != 0) {
 				int is_nilfs = 0;
 
-				if(bio->bi_bdev != NULL) {
-					if(bio->bi_bdev->bd_super != NULL) {
-						if(bio->bi_bdev->bd_super->s_type != NULL) {
-							if(bio->bi_bdev->bd_super->s_type->name != NULL) {
+				if(bio->bi_bdev != NULL)
+					if(bio->bi_bdev->bd_super != NULL)
+						if(bio->bi_bdev->bd_super->s_type != NULL)
+							if(bio->bi_bdev->bd_super->s_type->name != NULL)
 								is_nilfs = strcmp(bio->bi_bdev->bd_super->s_type->name, "nilfs2") == 0;
-								// printk("submit_bio - bio->bi_bdev->bd_super->s_type->name : %s\n", bio->bi_bdev->bd_super->s_type->name);
-							} else {
-								printk("submit_bio - bio->bi_bdev->bd_super->s_type->name : NULL\n");
-							}
-						} else {
-							printk("submit_bio - bio->bi_bdev->bd_super->s_type : NULL\n");
-						}
-					} else {
-						printk("submit_bio - bio->bi_bdev->bd_super : NULL\n");
-					}
-				} else {
-					printk("submit_bio - bio->bi_bdev : NULL\n");
-				}
 
 				if(is_nilfs) {
-					do_gettimeofday(&mytime);
+					do_gettimeofday(&sp_timeval);
 
-					hw1_file_system_type[hw1_index] = bio->bi_bdev->bd_super->s_type->name;
-					hw1_buffer[hw1_index] = (unsigned long long) bio->bi_iter.bi_sector;
-					hw1_time[hw1_index] = (unsigned long long)(mytime.tv_sec) * 1000000 + (unsigned long long)(mytime.tv_usec);
-					hw1_index = (hw1_index + 1) % HW1_SIZE;
-
-					// printk("submit_bio - hw1_index : %d\n", hw1_index);
-					// printk("submit_bio - hw1_buffer[hw1_index] : %llu\n", hw1_buffer[hw1_index]);
-					// printk("submit_bio - hw1_time[hw1_index] : %lld\n", hw1_time[hw1_index]);
+					sp_sector_arr[sp_arr_index] = (unsigned long long) bio->bi_iter.bi_sector;
+					sp_time_arr[sp_arr_index] = (unsigned long long) (sp_timeval.tv_sec * 1000000 + sp_timeval.tv_usec);
+					sp_arr_index = (sp_arr_index + 1) % SP_BUFFER_SIZE;
 		        }
-			} else {
-				// printk("submit_bio - bio->bi_iter.bi_sector : 0\n");
 			}
-			//==============================================================================================
+			//HyunsubKim 2017-11-02 End ========================================
 		} else {
 			task_io_account_read(bio->bi_iter.bi_size);
 			count_vm_events(PGPGIN, count);
