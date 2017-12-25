@@ -1,6 +1,6 @@
 # Korea University System Programming Assignments
 
-Thank you for [arkainoh](https://github.com/arkainoh/FileSystem-Profiling)
+Thank you for [arkainoh](https://github.com/arkainoh/FileSystem-Profiling), and [kimdog](https://github.com/kimdog/SystemProgramming-2016)
 
 ## Environment
 Ubuntu 16.04.3 LTS (64bit)  
